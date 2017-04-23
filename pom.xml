@@ -1,0 +1,205 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+  <prerequisites>
+    <maven>3.0</maven>
+  </prerequisites>
+
+  <groupId>de.informaticum</groupId>
+  <artifactId>syntaxhighlighter</artifactId>
+  <version>3.0.90-SNAPSHOT</version>
+  <name>SyntaxHighlighter v3.0.90</name>
+  <description>Mavenising the SyntaxHighlighter Project (by Alex Gorbatchev)</description>
+
+  <licenses>
+    <license>
+      <name>GPLv2</name> 
+      <comments>The GPLv2 license can be found within the SyntaxHighlighter archive (${syntaxhighlighter.url}) and is provided in this project's root folder too.</comments>
+    </license>
+    <license>
+      <name>MIT</name>
+      <comments>The MIT license can be found within the SyntaxHighlighter archive (${syntaxhighlighter.url}) and is provided in this project's root folder too.</comments>
+    </license>
+  </licenses>
+
+  <developers>
+    <developer>
+      <id>SGA</id>
+      <name>Stefan Gasterstädt</name>
+      <email>stefan@gasterstädt.de</email>
+      <url>http://stefan.gasterstädt.de</url>
+    </developer>
+  </developers>
+
+  <properties>
+    <syntaxhighlighter.version>3.0.90</syntaxhighlighter.version>
+    <syntaxhighlighter.tag>v${syntaxhighlighter.version}</syntaxhighlighter.tag>
+    <syntaxhighlighter.url>https://github.com/syntaxhighlighter/syntaxhighlighter/archive/${syntaxhighlighter.tag}.zip</syntaxhighlighter.url>
+    <syntaxhighlighter.tempfile>${syntaxhighlighter.tag}.zip</syntaxhighlighter.tempfile>
+    <syntaxhighlighter.buildfolder>${project.build.directory}/download/syntaxhighlighter-${syntaxhighlighter.version}</syntaxhighlighter.buildfolder>
+    <syntaxhighlighter.buildscript>build-syntaxhighlighter-${syntaxhighlighter.tag}.sh</syntaxhighlighter.buildscript>
+  </properties>
+
+  <scm>
+    <connection>scm:git:git@github.com:Informaticum/syntaxhighlighter.git</connection>
+    <developerConnection>scm:git:git@github.com:Informaticum/syntaxhighlighter.git</developerConnection>
+    <url>https://github.com/Informaticum/syntaxhighlighter</url>
+    <tag>HEAD</tag>
+  </scm>
+
+  <distributionManagement>
+    <snapshotRepository>
+      <id>ossrh</id>
+      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+    </snapshotRepository>
+    <repository>
+      <id>ossrh</id>
+      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+    </repository>
+  </distributionManagement>
+
+  <profiles>
+    <profile>
+      <id>gpg-signing</id>
+      <activation>
+        <property>
+          <name>gpg.keyname</name>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-gpg-plugin</artifactId>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>download-syntaxhighlighter</id>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <target>
+                <mkdir dir="${syntaxhighlighter.buildfolder}"/>
+                <get src="${syntaxhighlighter.url}"
+                     dest="${syntaxhighlighter.buildfolder}/${syntaxhighlighter.tempfile}"/>
+                <unzip src="${syntaxhighlighter.buildfolder}/${syntaxhighlighter.tempfile}"
+                       dest="${syntaxhighlighter.buildfolder}">
+                  <cutdirsmapper dirs="1"/>
+                </unzip>
+                <copy file="src/main/scripts/${syntaxhighlighter.buildscript}/"
+                      todir="${syntaxhighlighter.buildfolder}"/>
+              </target>
+            </configuration>
+          </execution>
+          <execution>
+            <id>build-syntaxhighlighter</id>
+            <phase>compile</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <target>
+                <exec executable="docker run -it --rm --name build-syntaxhighlighter -v &quot;${syntaxhighlighter.buildfolder}&quot;:/usr/src/app -w /usr/src/app node:0.10.32 /bin/bash ${syntaxhighlighter.buildscript}"/>
+              </target>
+            </configuration>
+          </execution>
+          <execution>
+            <id>provide-syntaxhighlighter</id>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <target>
+                <copy todir="${project.build.outputDirectory}/syntaxhighlighter/${syntaxhighlighter.version}">
+                  <fileset dir="${syntaxhighlighter.buildfolder}/pkg/"/>
+                  <fileset dir="${syntaxhighlighter.buildfolder}/" includes="GPL-LICENSE MIT-LICENSE"/>
+                </copy>
+              </target>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+    <pluginManagement>
+      <plugins>
+        <!-- MAVEN LIFECYCLE: default -->
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-antrun-plugin</artifactId>
+          <version>1.8</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-deploy-plugin</artifactId>
+          <version>2.8.2</version>
+        </plugin>
+        <plugin>
+          <!-- In order to disable artifact signing, run "mvn -Dgpg.skip ..." -->
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-gpg-plugin</artifactId>
+          <version>1.6</version>
+          <executions>
+            <execution>
+              <id>sign-artifacts</id>
+              <phase>verify</phase>
+              <goals>
+                <goal>sign</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-install-plugin</artifactId>
+          <version>2.5.2</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-jar-plugin</artifactId>
+          <version>3.0.2</version>
+          <configuration>
+            <forceCreation>true</forceCreation>
+            <archive>
+              <manifest>
+                <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+                <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+              </manifest>
+            </archive>
+          </configuration>
+        </plugin>
+        <!-- MAVEN LIFECYCLE: clean -->
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-clean-plugin</artifactId>
+          <version>3.0.0</version>
+          <configuration>
+            <failOnError>true</failOnError>
+          </configuration>
+        </plugin>
+        <!-- MAVEN LIFECYCLE: site -->
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-site-plugin</artifactId>
+          <version>3.5.1</version>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+  </build>
+
+
+
+</project>
