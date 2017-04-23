@@ -31,8 +31,9 @@
 # [3] http://www.saintsatplay.com/blog/2015/03/resolving-node-module-did-not-self-register-errors
 # [4] https://hub.docker.com/_/node/
 # [5] https://blog.csanchez.org/2017/01/31/running-docker-containers-as-non-root/
-npm install -g bower
-npm install -g grunt
+# npm install -g bower
+# npm install -g grunt
+# bower --allow-root install
 bower --allow-root install
 npm install
 grunt build

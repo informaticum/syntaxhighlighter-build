@@ -33,18 +33,19 @@
   </developers>
 
   <properties>
-    <syntaxhighlighter.version>3.0.90</syntaxhighlighter.version>
-    <syntaxhighlighter.tag>v${syntaxhighlighter.version}</syntaxhighlighter.tag>
-    <syntaxhighlighter.url>https://github.com/syntaxhighlighter/syntaxhighlighter/archive/${syntaxhighlighter.tag}.zip</syntaxhighlighter.url>
-    <syntaxhighlighter.tempfile>${syntaxhighlighter.tag}.zip</syntaxhighlighter.tempfile>
-    <syntaxhighlighter.buildfolder>${project.build.directory}/download/syntaxhighlighter-${syntaxhighlighter.version}</syntaxhighlighter.buildfolder>
-    <syntaxhighlighter.buildscript>build-syntaxhighlighter-${syntaxhighlighter.tag}.sh</syntaxhighlighter.buildscript>
+    <syntaxhighlighter.release.version>3.0.90</syntaxhighlighter.release.version>
+    <syntaxhighlighter.release.tag>v${syntaxhighlighter.release.version}</syntaxhighlighter.release.tag>
+    <syntaxhighlighter.release.file>${syntaxhighlighter.release.tag}.zip</syntaxhighlighter.release.file>
+    <syntaxhighlighter.release.url>https://github.com/syntaxhighlighter/syntaxhighlighter/archive/${syntaxhighlighter.release.file}</syntaxhighlighter.release.url>
+    <syntaxhighlighter.sourcefolder>${project.build.directory}/download/syntaxhighlighter-${syntaxhighlighter.release.version}</syntaxhighlighter.sourcefolder>
+    <syntaxhighlighter.buildscript>build-syntaxhighlighter-${syntaxhighlighter.release.tag}.sh</syntaxhighlighter.buildscript>
+    <docker.showLogs>true</docker.showLogs>
   </properties>
 
   <scm>
-    <connection>scm:git:git@github.com:Informaticum/syntaxhighlighter.git</connection>
-    <developerConnection>scm:git:git@github.com:Informaticum/syntaxhighlighter.git</developerConnection>
-    <url>https://github.com/Informaticum/syntaxhighlighter</url>
+    <connection>scm:git:git@github.com:informaticum/syntaxhighlighter.git</connection>
+    <developerConnection>scm:git:git@github.com:informaticum/syntaxhighlighter.git</developerConnection>
+    <url>https://github.com/informaticum/syntaxhighlighter</url>
     <tag>HEAD</tag>
   </scm>
 
@@ -92,27 +93,15 @@
             </goals>
             <configuration>
               <target>
-                <mkdir dir="${syntaxhighlighter.buildfolder}"/>
-                <get src="${syntaxhighlighter.url}"
-                     dest="${syntaxhighlighter.buildfolder}/${syntaxhighlighter.tempfile}"/>
-                <unzip src="${syntaxhighlighter.buildfolder}/${syntaxhighlighter.tempfile}"
-                       dest="${syntaxhighlighter.buildfolder}">
-                  <cutdirsmapper dirs="1"/>
+                <mkdir dir="${syntaxhighlighter.sourcefolder}" />
+                <get src="${syntaxhighlighter.release.url}"
+                     dest="${syntaxhighlighter.sourcefolder}/" />
+                <unzip src="${syntaxhighlighter.sourcefolder}/${syntaxhighlighter.release.file}"
+                       dest="${syntaxhighlighter.sourcefolder}">
+                  <cutdirsmapper dirs="1" />
                 </unzip>
-                <copy file="src/main/scripts/${syntaxhighlighter.buildscript}/"
-                      todir="${syntaxhighlighter.buildfolder}"/>
-              </target>
-            </configuration>
-          </execution>
-          <execution>
-            <id>build-syntaxhighlighter</id>
-            <phase>compile</phase>
-            <goals>
-              <goal>run</goal>
-            </goals>
-            <configuration>
-              <target>
-                <exec executable="docker run -it --rm --name build-syntaxhighlighter -v &quot;${syntaxhighlighter.buildfolder}&quot;:/usr/src/app -w /usr/src/app node:0.10.32 /bin/bash ${syntaxhighlighter.buildscript}"/>
+                <copy file="src/main/docker/syntaxhighlighter/${syntaxhighlighter.buildscript}"
+                      todir="${syntaxhighlighter.sourcefolder}" />
               </target>
             </configuration>
           </execution>
@@ -124,11 +113,52 @@
             </goals>
             <configuration>
               <target>
-                <copy todir="${project.build.outputDirectory}/syntaxhighlighter/${syntaxhighlighter.version}">
-                  <fileset dir="${syntaxhighlighter.buildfolder}/pkg/"/>
-                  <fileset dir="${syntaxhighlighter.buildfolder}/" includes="GPL-LICENSE MIT-LICENSE"/>
+                <copy todir="${project.build.outputDirectory}/syntaxhighlighter/${syntaxhighlighter.release.version}">
+                  <fileset dir="${syntaxhighlighter.sourcefolder}/pkg/" />
+                  <fileset dir="${syntaxhighlighter.sourcefolder}/" includes="GPL-LICENSE MIT-LICENSE" />
                 </copy>
               </target>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>io.fabric8</groupId>
+        <artifactId>docker-maven-plugin</artifactId>
+        <version>0.20.1</version>
+        <executions>
+          <execution>
+            <id>syntaxhighlighter</id>
+            <phase>process-resources</phase>
+            <goals>
+              <goal>build</goal>
+              <goal>start</goal>
+            </goals>
+            <configuration>
+              <verbose>true</verbose>
+              <images>
+                <image>
+                  <name>node-build-env</name>
+                  <build>
+                    <dockerFileDir>${project.basedir}/src/main/docker/syntaxhighlighter</dockerFileDir>
+                  </build>
+                  <run>
+                    <hostname>build-host</hostname>
+                      <volumes>
+                      <bind>${syntaxhighlighter.sourcefolder}:/home/bob/workspace/syntaxhighlighter</bind>
+                    </volumes>
+                    <log>
+                      <enabled>true</enabled>
+                    </log>
+                    <workingDir>/home/bob/workspace/syntaxhighlighter</workingDir>
+                    <cmd>bash ${syntaxhighlighter.buildscript}</cmd>
+                    <wait>
+                      <log>Done, without errors</log>
+                      <time>120000</time>
+                    </wait>
+                  </run>
+                </image>
+              </images>
             </configuration>
           </execution>
         </executions>
