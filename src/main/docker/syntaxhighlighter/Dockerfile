@@ -1,5 +1,5 @@
-FROM node:0.10.32
-LABEL Description="This image is used to provide an environment for projects being build on Node.js (0.10.32)" Vendor="informaticum.de" Version="1.0"
+FROM node:0.10
+LABEL Description="This image is used to provide an environment for projects being build on Node.js (0.10)" Vendor="informaticum.de" Version="1.0"
 MAINTAINER Stefan Gasterstädt <stefan@gasterstädt.de>
 
 RUN useradd -ms /bin/bash bob
