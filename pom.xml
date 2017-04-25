@@ -38,7 +38,9 @@
     <syntaxhighlighter.release.file>${syntaxhighlighter.release.tag}.zip</syntaxhighlighter.release.file>
     <syntaxhighlighter.release.url>https://github.com/syntaxhighlighter/syntaxhighlighter/archive/${syntaxhighlighter.release.file}</syntaxhighlighter.release.url>
     <syntaxhighlighter.sourcefolder>${project.build.directory}/download/syntaxhighlighter-${syntaxhighlighter.release.version}</syntaxhighlighter.sourcefolder>
-    <syntaxhighlighter.buildscript>build-syntaxhighlighter-${syntaxhighlighter.release.tag}.sh</syntaxhighlighter.buildscript>
+    <syntaxhighlighter.dockerfolder>src/main/docker/syntaxhighlighter</syntaxhighlighter.dockerfolder>
+    <syntaxhighlighter.build.folder>/home/bob/workspace/syntaxhighlighter</syntaxhighlighter.build.folder>
+    <syntaxhighlighter.build.script>build-syntaxhighlighter-${syntaxhighlighter.release.tag}.sh</syntaxhighlighter.build.script>
     <docker.showLogs>true</docker.showLogs>
   </properties>
 
@@ -100,7 +102,7 @@
                        dest="${syntaxhighlighter.sourcefolder}">
                   <cutdirsmapper dirs="1" />
                 </unzip>
-                <copy file="src/main/docker/syntaxhighlighter/${syntaxhighlighter.buildscript}"
+                <copy file="${syntaxhighlighter.dockerfolder}/${syntaxhighlighter.build.script}"
                       todir="${syntaxhighlighter.sourcefolder}" />
               </target>
             </configuration>
@@ -140,18 +142,18 @@
                 <image>
                   <name>node-build-env</name>
                   <build>
-                    <dockerFileDir>${project.basedir}/src/main/docker/syntaxhighlighter</dockerFileDir>
+                    <dockerFileDir>${project.basedir}/${syntaxhighlighter.dockerfolder}</dockerFileDir>
                   </build>
                   <run>
                     <hostname>build-host</hostname>
                       <volumes>
-                      <bind>${syntaxhighlighter.sourcefolder}:/home/bob/workspace/syntaxhighlighter</bind>
+                      <bind>${syntaxhighlighter.sourcefolder}:${syntaxhighlighter.build.folder}</bind>
                     </volumes>
                     <log>
                       <enabled>true</enabled>
                     </log>
-                    <workingDir>/home/bob/workspace/syntaxhighlighter</workingDir>
-                    <cmd>bash ${syntaxhighlighter.buildscript}</cmd>
+                    <workingDir>${syntaxhighlighter.build.folder}</workingDir>
+                    <cmd>bash ${syntaxhighlighter.build.script}</cmd>
                     <wait>
                       <log>Done, without errors</log>
                       <time>120000</time>
