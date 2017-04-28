@@ -1,4 +1,5 @@
 #!/bin/bash
+set -x #echo on
 
 ### In order to build "SyntaxHighlighter v3.0.90" [1], you need an old
 ### "Node.js". Otherwise, when running "grunt" an error is thrown:
