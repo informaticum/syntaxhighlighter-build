@@ -14,12 +14,12 @@
 
   <licenses>
     <license>
-      <name>GPLv2</name> 
-      <comments>The GPLv2 license can be found within the SyntaxHighlighter archive (${syntaxhighlighter.release.url}) and is provided in this project's root folder too.</comments>
+      <name>LGPLv3</name> 
+      <comments>The LGPLv3 license can be found within the SyntaxHighlighter archive (${syntaxhighlighter.release.url}) and is provided in this project's root folder too.</comments>
     </license>
     <license>
       <name>MIT</name>
-      <comments>The MIT license can be found within the SyntaxHighlighter archive (${syntaxhighlighter.release.url}) and is provided in this project's root folder too.</comments>
+      <comments>The MIT license is mentioned within the SyntaxHighlighter archive (${syntaxhighlighter.release.url}) and is provided in this project's root folder too.</comments>
     </license>
   </licenses>
 
