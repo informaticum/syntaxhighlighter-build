@@ -8,8 +8,8 @@
 
   <groupId>de.informaticum</groupId>
   <artifactId>syntaxhighlighter</artifactId>
-  <version>3.0.90-SNAPSHOT</version>
-  <name>SyntaxHighlighter v3.0.90</name>
+  <version>3.0.83-SNAPSHOT</version>
+  <name>SyntaxHighlighter v3.0.83</name>
   <description>Mavenising the SyntaxHighlighter Project (by Alex Gorbatchev)</description>
 
   <licenses>
@@ -33,14 +33,14 @@
   </developers>
 
   <properties>
-    <syntaxhighlighter.release.version>3.0.90</syntaxhighlighter.release.version>
-    <syntaxhighlighter.release.tag>v${syntaxhighlighter.release.version}</syntaxhighlighter.release.tag>
+    <syntaxhighlighter.release.version>3.0.83</syntaxhighlighter.release.version>
+    <syntaxhighlighter.release.tag>${syntaxhighlighter.release.version}</syntaxhighlighter.release.tag>
     <syntaxhighlighter.release.file>${syntaxhighlighter.release.tag}.zip</syntaxhighlighter.release.file>
     <syntaxhighlighter.release.url>https://github.com/syntaxhighlighter/syntaxhighlighter/archive/${syntaxhighlighter.release.file}</syntaxhighlighter.release.url>
     <syntaxhighlighter.sourcefolder>${project.build.directory}/download/syntaxhighlighter-${syntaxhighlighter.release.version}</syntaxhighlighter.sourcefolder>
     <syntaxhighlighter.dockerfolder>src/main/docker/syntaxhighlighter</syntaxhighlighter.dockerfolder>
     <syntaxhighlighter.build.folder>/home/bob/workspace/syntaxhighlighter</syntaxhighlighter.build.folder>
-    <syntaxhighlighter.build.script>build-syntaxhighlighter-${syntaxhighlighter.release.tag}.sh</syntaxhighlighter.build.script>
+    <syntaxhighlighter.build.script>build-syntaxhighlighter-v${syntaxhighlighter.release.tag}.sh</syntaxhighlighter.build.script>
     <docker.showLogs>true</docker.showLogs>
   </properties>
 
@@ -116,8 +116,8 @@
             <configuration>
               <target>
                 <copy todir="${project.build.outputDirectory}/syntaxhighlighter/${syntaxhighlighter.release.version}">
-                  <fileset dir="${syntaxhighlighter.sourcefolder}/pkg/" />
-                  <fileset dir="${syntaxhighlighter.sourcefolder}/" includes="GPL-LICENSE MIT-LICENSE" />
+                  <fileset dir="${syntaxhighlighter.sourcefolder}/build/output" includes="scripts/ styles/" />
+                  <fileset dir="${syntaxhighlighter.sourcefolder}/build/includes/" includes="LGPLv3.txt" />
                 </copy>
               </target>
             </configuration>
@@ -155,7 +155,7 @@
                     <workingDir>${syntaxhighlighter.build.folder}</workingDir>
                     <cmd>bash ${syntaxhighlighter.build.script}</cmd>
                     <wait>
-                      <log>Done, without errors</log>
+                      <log>BUILD FINISHED</log>
                       <time>120000</time>
                     </wait>
                   </run>

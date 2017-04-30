@@ -1,9 +1,9 @@
-# SyntaxHighlighter v3.0.90
+# SyntaxHighlighter v3.0.83
 
 [SyntaxHighlighter](https://github.com/syntaxhighlighter/syntaxhighlighter) is a fully functional self-contained code syntax highlighter developed in JavaScript.
 It is developed and maintained by [Alex Gorbatchev](https://github.com/alexgorbatchev), and is dual licensed under the MIT and GPLv2 licenses.
 
-This project builds SyntaxHighlighter from the sources ([v3.0.90](https://github.com/syntaxhighlighter/syntaxhighlighter/tree/v3.0.90)) and -- packaged into a JAR (Java Archive) file -- publishes the result into the Maven Central Repository.
+This project builds SyntaxHighlighter from the sources ([v3.0.83](https://github.com/syntaxhighlighter/syntaxhighlighter/tree/3.0.83)) and -- packaged into a JAR (Java Archive) file -- publishes the result into the Maven Central Repository.
 
 ## Inject SyntaxHighlighter into JavaDoc 
 
@@ -47,7 +47,7 @@ extends J8BlockJUnit4ClassRunner {
           <resourcesArtifact>
             <groupId>de.informaticum</groupId>
             <artifactId>syntaxhighlighter</artifactId>
-            <version>3.0.90</version>
+            <version>3.0.83</version>
           </resourcesArtifact>
         </resourcesArtifacts>
         <additionalJOptions>
@@ -55,10 +55,10 @@ extends J8BlockJUnit4ClassRunner {
         </additionalJOptions>
         <!-- Add SyntaxHighlighter (Java brushing) features (at the beginning of each JavaDoc HTML file). -->
         <top><![CDATA[
-          <script src="{@docRoot}/syntaxhighlighter/3.0.90/scripts/shCore.min.js" type="text/javascript"></script>
-          <script src="{@docRoot}/syntaxhighlighter/3.0.90/scripts/shBrushJava.js" type="text/javascript"></script>
-          <link href="{@docRoot}/syntaxhighlighter/3.0.90/styles/shCore.css" rel="stylesheet" type="text/css" />
-          <link href="{@docRoot}/syntaxhighlighter/3.0.90/styles/shThemeDefault.css" rel="stylesheet" type="text/css" />
+          <script src="{@docRoot}/syntaxhighlighter/3.0.83/scripts/shCore.js" type="text/javascript"></script>
+          <script src="{@docRoot}/syntaxhighlighter/3.0.83/scripts/shBrushJava.js" type="text/javascript"></script>
+          <link href="{@docRoot}/syntaxhighlighter/3.0.83/styles/shCore.css" rel="stylesheet" type="text/css" />
+          <link href="{@docRoot}/syntaxhighlighter/3.0.83/styles/shThemeDefault.css" rel="stylesheet" type="text/css" />
         ]]>
         </top>
         <!-- Activate and customize SyntaxHighlighter features (at the bottom of each JavaDoc HTML file). -->
