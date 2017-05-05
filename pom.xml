@@ -1,5 +1,6 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
   <modelVersion>4.0.0</modelVersion>
   <prerequisites>
@@ -14,12 +15,12 @@
 
   <licenses>
     <license>
-      <name>LGPLv3</name> 
+      <name>LGPLv3</name>
       <comments>The LGPLv3 license can be found within the SyntaxHighlighter archive (${syntaxhighlighter.release.url}) and is provided in this project's root folder too.</comments>
     </license>
     <license>
       <name>MIT</name>
-      <comments>The MIT license is mentioned within the SyntaxHighlighter archive (${syntaxhighlighter.release.url}) and is provided in this project's root folder too.</comments>
+      <comments>The MIT license can be found within the SyntaxHighlighter archive (${syntaxhighlighter.release.url}) and is provided in this project's root folder too.</comments>
     </license>
   </licenses>
 
@@ -35,13 +36,10 @@
   <properties>
     <syntaxhighlighter.release.version>3.0.83</syntaxhighlighter.release.version>
     <syntaxhighlighter.release.tag>${syntaxhighlighter.release.version}</syntaxhighlighter.release.tag>
-    <syntaxhighlighter.release.file>${syntaxhighlighter.release.tag}.zip</syntaxhighlighter.release.file>
-    <syntaxhighlighter.release.url>https://github.com/syntaxhighlighter/syntaxhighlighter/archive/${syntaxhighlighter.release.file}</syntaxhighlighter.release.url>
-    <syntaxhighlighter.sourcefolder>${project.build.directory}/download/syntaxhighlighter-${syntaxhighlighter.release.version}</syntaxhighlighter.sourcefolder>
-    <syntaxhighlighter.dockerfolder>src/main/docker/syntaxhighlighter</syntaxhighlighter.dockerfolder>
-    <syntaxhighlighter.build.folder>/home/bob/workspace/syntaxhighlighter</syntaxhighlighter.build.folder>
-    <syntaxhighlighter.build.script>build-syntaxhighlighter-v${syntaxhighlighter.release.tag}.sh</syntaxhighlighter.build.script>
-    <docker.showLogs>true</docker.showLogs>
+    <!-- syntaxhighlighter.release.url>http://alexgorbatchev.com/SyntaxHighlighter/download/download.php?sh_current</syntaxhighlighter.release.url -->
+    <!-- Alex Gorbatchev's download URL is broken; Thus, use the following alternative (by https://www.mediawiki.org/wiki/Extension:SyntaxHighlighter): -->
+    <syntaxhighlighter.release.url>https://github.com/seongjaelee/SyntaxHighlighter/zipball/master</syntaxhighlighter.release.url>
+    <syntaxhighlighter.release.file>syntaxhighlighter-${syntaxhighlighter.release.version}-release.zip</syntaxhighlighter.release.file>
   </properties>
 
   <scm>
@@ -88,79 +86,29 @@
         <artifactId>maven-antrun-plugin</artifactId>
         <executions>
           <execution>
-            <id>download-syntaxhighlighter</id>
-            <phase>generate-resources</phase>
-            <goals>
-              <goal>run</goal>
-            </goals>
-            <configuration>
-              <target>
-                <mkdir dir="${syntaxhighlighter.sourcefolder}" />
-                <get src="${syntaxhighlighter.release.url}"
-                     dest="${syntaxhighlighter.sourcefolder}/" />
-                <unzip src="${syntaxhighlighter.sourcefolder}/${syntaxhighlighter.release.file}"
-                       dest="${syntaxhighlighter.sourcefolder}">
-                  <cutdirsmapper dirs="1" />
-                </unzip>
-                <copy file="${syntaxhighlighter.dockerfolder}/${syntaxhighlighter.build.script}"
-                      todir="${syntaxhighlighter.sourcefolder}" />
-              </target>
-            </configuration>
-          </execution>
-          <execution>
-            <id>provide-syntaxhighlighter</id>
-            <phase>prepare-package</phase>
-            <goals>
-              <goal>run</goal>
-            </goals>
-            <configuration>
-              <target>
-                <copy todir="${project.build.outputDirectory}/syntaxhighlighter/${syntaxhighlighter.release.version}">
-                  <fileset dir="${syntaxhighlighter.sourcefolder}/build/output" includes="scripts/ styles/" />
-                  <fileset dir="${syntaxhighlighter.sourcefolder}/build/includes/" includes="LGPLv3.txt" />
-                </copy>
-              </target>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>io.fabric8</groupId>
-        <artifactId>docker-maven-plugin</artifactId>
-        <version>0.20.1</version>
-        <executions>
-          <execution>
-            <id>syntaxhighlighter</id>
             <phase>process-resources</phase>
             <goals>
-              <goal>build</goal>
-              <goal>start</goal>
+              <goal>run</goal>
             </goals>
             <configuration>
-              <verbose>true</verbose>
-              <images>
-                <image>
-                  <name>node-build-env</name>
-                  <build>
-                    <dockerFileDir>${project.basedir}/${syntaxhighlighter.dockerfolder}</dockerFileDir>
-                  </build>
-                  <run>
-                    <hostname>build-host</hostname>
-                      <volumes>
-                      <bind>${syntaxhighlighter.sourcefolder}:${syntaxhighlighter.build.folder}</bind>
-                    </volumes>
-                    <log>
-                      <enabled>true</enabled>
-                    </log>
-                    <workingDir>${syntaxhighlighter.build.folder}</workingDir>
-                    <cmd>bash ${syntaxhighlighter.build.script}</cmd>
-                    <wait>
-                      <log>BUILD FINISHED</log>
-                      <time>120000</time>
-                    </wait>
-                  </run>
-                </image>
-              </images>
+              <target>
+                <get src="${syntaxhighlighter.release.url}"
+                  dest="${project.build.directory}/${syntaxhighlighter.release.file}"/>
+                <unzip
+                  src="${project.build.directory}/${syntaxhighlighter.release.file}"
+                  dest="${project.build.directory}/content">
+                  <cutdirsmapper dirs="1"/>
+                </unzip>
+                <copy
+                  todir="${project.build.outputDirectory}/syntaxhighlighter/${syntaxhighlighter.release.version}">
+                  <fileset
+                    dir="${project.build.directory}/content/syntaxhighlighter"
+                    includes="styles/ scripts/"/>
+                  <fileset
+                    dir="${project.build.directory}/content/syntaxhighlighter/"
+                    includes="LGPL-LICENSE MIT-LICENSE"/>
+                </copy>
+              </target>
             </configuration>
           </execution>
         </executions>
