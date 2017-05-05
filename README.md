@@ -3,7 +3,7 @@
 [SyntaxHighlighter](https://github.com/syntaxhighlighter/syntaxhighlighter) is a fully functional self-contained code syntax highlighter developed in JavaScript.
 It is developed and maintained by [Alex Gorbatchev](https://github.com/alexgorbatchev), and is dual licensed under the MIT and LGPL licenses.
 
-This project builds SyntaxHighlighter from the sources ([v3.0.83](https://github.com/syntaxhighlighter/syntaxhighlighter/tree/3.0.83)) and -- packaged into a JAR (Java Archive) file -- publishes the result into the Maven Central Repository.
+This project builds SyntaxHighlighter from the release file ([v3.0.83](https://github.com/seongjaelee/SyntaxHighlighter/zipball/master)) and -- packaged into a JAR (Java Archive) file -- publishes the result into the Maven Central Repository.
 
 ## Inject SyntaxHighlighter into JavaDoc 
 
