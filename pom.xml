@@ -36,9 +36,9 @@
   <properties>
     <syntaxhighlighter.release.version>3.0.83</syntaxhighlighter.release.version>
     <syntaxhighlighter.release.tag>${syntaxhighlighter.release.version}</syntaxhighlighter.release.tag>
-    <!-- syntaxhighlighter.release.url>http://alexgorbatchev.com/SyntaxHighlighter/download/download.php?sh_current</syntaxhighlighter.release.url -->
-    <!-- Alex Gorbatchev's download URL is broken; Thus, use the following alternative (by https://www.mediawiki.org/wiki/Extension:SyntaxHighlighter): -->
-    <syntaxhighlighter.release.url>https://github.com/seongjaelee/SyntaxHighlighter/zipball/master</syntaxhighlighter.release.url>
+    <syntaxhighlighter.release.url>http://alexgorbatchev.com/SyntaxHighlighter/download/download.php?sh_current</syntaxhighlighter.release.url>
+    <!-- Alex Gorbatchev's download URL is broken; Thus, use the following alternative (mentioned by https://www.mediawiki.org/wiki/Extension:SyntaxHighlighter): -->
+    <syntaxhighlighter.alternative.url>https://github.com/seongjaelee/SyntaxHighlighter/zipball/master</syntaxhighlighter.alternative.url>
     <syntaxhighlighter.release.file>syntaxhighlighter-${syntaxhighlighter.release.version}-release.zip</syntaxhighlighter.release.file>
   </properties>
 
@@ -92,7 +92,7 @@
             </goals>
             <configuration>
               <target>
-                <get src="${syntaxhighlighter.release.url}"
+                <get src="${syntaxhighlighter.alternative.url}"
                   dest="${project.build.directory}/${syntaxhighlighter.release.file}"/>
                 <unzip
                   src="${project.build.directory}/${syntaxhighlighter.release.file}"
