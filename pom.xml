@@ -10,8 +10,10 @@
   <groupId>de.informaticum</groupId>
   <artifactId>syntaxhighlighter</artifactId>
   <version>3.0.83</version>
+ 
   <name>SyntaxHighlighter v3.0.83</name>
   <description>Mavenising the SyntaxHighlighter Project (by Alex Gorbatchev)</description>
+  <url>https://github.com/informaticum/syntaxhighlighter-build</url>
 
   <licenses>
     <license>
@@ -45,7 +47,7 @@
   <scm>
     <connection>scm:git:git@github.com:informaticum/syntaxhighlighter.git</connection>
     <developerConnection>scm:git:git@github.com:informaticum/syntaxhighlighter.git</developerConnection>
-    <url>https://github.com/informaticum/syntaxhighlighter</url>
+    <url>https://github.com/informaticum/syntaxhighlighter-build.git</url>
     <tag>HEAD</tag>
   </scm>
 
