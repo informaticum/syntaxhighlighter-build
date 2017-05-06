@@ -92,21 +92,13 @@
             </goals>
             <configuration>
               <target>
-                <get src="${syntaxhighlighter.alternative.url}"
-                  dest="${project.build.directory}/${syntaxhighlighter.release.file}"/>
-                <unzip
-                  src="${project.build.directory}/${syntaxhighlighter.release.file}"
-                  dest="${project.build.directory}/unzip">
+                <get src="${syntaxhighlighter.alternative.url}" dest="${project.build.directory}/${syntaxhighlighter.release.file}"/>
+                <unzip src="${project.build.directory}/${syntaxhighlighter.release.file}" dest="${project.build.directory}/unzip">
                   <cutdirsmapper dirs="1"/>
                 </unzip>
-                <copy
-                  todir="${project.build.outputDirectory}/syntaxhighlighter/${syntaxhighlighter.release.version}">
-                  <fileset
-                    dir="${project.build.directory}/unzip/syntaxhighlighter"
-                    includes="styles/ scripts/"/>
-                  <fileset
-                    dir="${project.build.directory}/unzip/syntaxhighlighter/"
-                    includes="LGPL-LICENSE MIT-LICENSE"/>
+                <copy todir="${project.build.outputDirectory}/syntaxhighlighter/${syntaxhighlighter.release.version}">
+                  <fileset dir="${project.build.directory}/unzip/syntaxhighlighter" includes="styles/ scripts/"/>
+                  <fileset dir="${project.build.directory}/unzip/syntaxhighlighter/" includes="LGPL-LICENSE MIT-LICENSE"/>
                 </copy>
               </target>
             </configuration>
